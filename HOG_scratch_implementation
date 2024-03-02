@@ -1,1 +1,76 @@
+import numpy as np
+import cv2
+
+def calculate_gradients(image):
+  sobel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
+  sobel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
+
+  gradient_x = cv2.filter2D(image, -1, sobel_x)
+  gradient_y = cv2.filter2D(image, -1, sobel_y)
+
+  return gradient_x, gradient_y
+
+def calculate_magnitude_and_angle(gradient_x,gradient_y):
+  magnitude = np.sqrt(gradient_x**2 + gradient_y**2)
+  angle=np.arctan2(gradient_y,gradient_x)*(180/np.pi)
+  return magnitude,angle
+
+def calculate_histogram(magnitude, angle, cells_per_block):
+    # Divide image into cells
+    cell_size = 8
+    cells_in_x = magnitude.shape[1]
+    cells_in_y = magnitude.shape[0]
+
+    histograms = []
+
+    for i in range(cells_in_y):
+        for j in range(cells_in_x):
+            cell_magnitude = magnitude[i * cell_size: (i + 1) * cell_size,
+                                        j * cell_size: (j + 1) * cell_size]
+            cell_angle = angle[i * cell_size: (i + 1) * cell_size,
+                                j * cell_size: (j + 1) * cell_size]
+
+            # Calculate histogram for each cell
+            hist, _ = np.histogram(cell_angle, bins=9, range=(0, 180),
+                                   weights=cell_magnitude)
+
+            histograms.append(hist)
+
+    histograms = np.array(histograms).reshape(cells_in_y, cells_in_x, 9)
+
+    return histograms
+
+def block_normalization(histograms):
+    block_size = 2
+    blocks_in_x = histograms.shape[1] - block_size + 1
+    blocks_in_y = histograms.shape[0] - block_size + 1
+
+    features = []
+
+    for i in range(blocks_in_y):
+        for j in range(blocks_in_x):
+            block = histograms[i:i + block_size, j:j + block_size, :].flatten()
+            norm_factor = np.sqrt(np.sum(block**2) + 1e-5)
+            features.append(block / norm_factor)
+
+    return np.array(features).flatten()
+
+def extract_hog_features(image):
+    # Grayscale conversion
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # Calculate gradients
+    gradient_x, gradient_y = calculate_gradients(gray_image)
+
+    # Calculate magnitude and angle
+    magnitude, angle = calculate_magnitude_and_angle(gradient_x, gradient_y)
+
+    # Calculate histograms for cells
+    histograms = calculate_histogram(magnitude, angle, cells_per_block=2)
+
+    # Block normalization
+    features = block_normalization(histograms)
+
+    return feature
+
 
