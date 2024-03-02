@@ -1,4 +1,5 @@
 # Covid-Detection-from-Chest-X-Ray
+# This project deals with the covid-19 detection from chest X-ray using various methods and a comparitive study between them. HOG features are computed and then models like Random Forest classifier, Decision Tree classifier , Gaussian NB ,kNeighbours classifier and logistic regression.
 
 ### Colab File : https://colab.research.google.com/drive/1LWDPv8UWCeCEcH-9LFtXzwVO5HkJrEe6#scrollTo=wFKyrDpVd2DI
 ### Resources : 
