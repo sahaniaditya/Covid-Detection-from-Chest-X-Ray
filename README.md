@@ -33,7 +33,7 @@ The outbreak of COVID-19 has posed a significant challenge worldwide, and the ea
 ## Repository Structure
 
 - `data/`: Contains the dataset of chest X-ray images.
-- `code/`: Contains Python scripts for implementing HOG, CNN, and LBP techniques for COVID-19 detection.
+- `Covid_Detection_Using_X_Ray.ipynb/`: Contains Python scripts for implementing HOG, CNN, and LBP techniques for COVID-19 detection.
 - `README.md`: This file, providing an overview of the project.
 
 ## Usage
