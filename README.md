@@ -43,6 +43,7 @@ The outbreak of COVID-19 has posed a significant challenge worldwide, and the ea
 
     ```bash
     git clone https://github.com/sahaniaditya/Covid-Detection-from-Chest-X-Ray.git
+    git clone https://github.com/shikhar5647/Covid-Detection-from-Chest-X-Ray.git
     ```
 
 2. Navigate to the project directory:
