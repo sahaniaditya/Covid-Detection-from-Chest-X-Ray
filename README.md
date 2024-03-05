@@ -15,7 +15,7 @@ This repository contains code for detecting COVID-19 from chest X-ray images usi
 
 ## Introduction
 
-The outbreak of COVID-19 has posed a significant challenge worldwide, and the early and accurate detection of the disease is crucial for effective management and control. Chest X-ray imaging has emerged as a valuable tool for diagnosing COVID-19 due to its wide availability and rapid turnaround time. In this project, we explore three different techniques for automated COVID-19 detection from chest X-ray images.
+The outbreak of COVID-19 has posed a significant challenge worldwide, and the early and accurate detection of the disease is crucial for effective management and control. Chest X-ray imaging has emerged as a valuable tool for diagnosing COVID-19 due to its wide availability and rapid turnaround time. In this project, we explore three different techniques for automated COVID-19 detection from chest X-ray images.The quality of the chest-X-ray images is not good , so a lot of preprocessing is required .
 
 ## Techniques Used
 
@@ -43,6 +43,7 @@ The outbreak of COVID-19 has posed a significant challenge worldwide, and the ea
 
     ```bash
     git clone https://github.com/sahaniaditya/Covid-Detection-from-Chest-X-Ray.git
+    git clone https://github.com/shikhar5647/Covid-Detection-from-Chest-X-Ray.git
     ```
 
 2. Navigate to the project directory:
@@ -66,5 +67,5 @@ In this project, we explored three different techniques for COVID-19 detection f
 ## Contributors
 
 - [Aditya Sahani](https://github.com/sahaniaditya)
-- [Shikhar Dave](https://github.com/shikhar567)
+- [Shikhar Dave](https://github.com/shikhar5647)
          
