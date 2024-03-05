@@ -66,5 +66,5 @@ In this project, we explored three different techniques for COVID-19 detection f
 ## Contributors
 
 - [Aditya Sahani](https://github.com/sahaniaditya)
-- [Shikhar Dave](https://github.com/shikhar567)
+- [Shikhar Dave](https://github.com/shikhar5647)
          
