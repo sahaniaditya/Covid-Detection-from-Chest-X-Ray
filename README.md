@@ -41,20 +41,20 @@ The outbreak of COVID-19 has posed a significant challenge worldwide, and the ea
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/covid-xray-detection.git
+    git clone https://github.com/sahaniaditya/Covid-Detection-from-Chest-X-Ray.git
     ```
 
 2. Navigate to the project directory:
 
     ```bash
-    cd covid-xray-detection
+    cd Covid-Detection-from-Chest-X-Ray
     ```
 
 3. Follow the instructions in the respective directories (`code/`) to run the code for each technique.
 
 ## Results
 
-- HOG technique achieved an accuracy of X%.
+- HOG technique achieved an accuracy of 74.56%.
 - CNN technique achieved an accuracy of Y%.
 - LBP technique achieved an accuracy of Z%.
 
@@ -65,5 +65,5 @@ In this project, we explored three different techniques for COVID-19 detection f
 ## Contributors
 
 - [Aditya Sahani](https://github.com/sahaniaditya)
-- [Shikhar Dave](https://github.com/coauthors-username)
+- [Shikhar Dave](https://github.com/shikhar567)
          
