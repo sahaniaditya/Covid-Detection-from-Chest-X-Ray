@@ -15,7 +15,7 @@ This repository contains code for detecting COVID-19 from chest X-ray images usi
 
 ## Introduction
 
-The outbreak of COVID-19 has posed a significant challenge worldwide, and the early and accurate detection of the disease is crucial for effective management and control. Chest X-ray imaging has emerged as a valuable tool for diagnosing COVID-19 due to its wide availability and rapid turnaround time. In this project, we explore three different techniques for automated COVID-19 detection from chest X-ray images.
+The outbreak of COVID-19 has posed a significant challenge worldwide, and the early and accurate detection of the disease is crucial for effective management and control. Chest X-ray imaging has emerged as a valuable tool for diagnosing COVID-19 due to its wide availability and rapid turnaround time. In this project, we explore three different techniques for automated COVID-19 detection from chest X-ray images.The quality of the chest-X-ray images is not good , so a lot of preprocessing is required .
 
 ## Techniques Used
 
