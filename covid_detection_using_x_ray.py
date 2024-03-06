@@ -11,10 +11,7 @@ from google.colab import drive
 drive.mount('/content/drive')
 import os
 os.chdir('/content/drive/My Drive/X-ray')
-
 import shutil
-
-
 source_directory = '/content/drive/My Drive/X-ray'
 
 # https://drive.google.com/drive/folders/1U9AZEc2Bqp7wFYmklkpcpKjcWc5pl213?usp=drive_link
@@ -167,7 +164,7 @@ data = pd.DataFrame({'Data': data, 'Label': labels})
 print(data.head())
 print(labels[1])
 
-labels
+len(labels)
 
 data.shape
 
@@ -288,36 +285,34 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=num_workers) as executor:
 # X is now a NumPy array with shape (number_of_images, 150, 150, 2)
 # print(X.shape)
 
-X
+X.shape
 
 X = X/255
 
-X.shape
 
 
+# import random
 
-import random
+# # Number of images to display for each class
+# num_images_to_display = 5
 
-# Number of images to display for each class
-num_images_to_display = 5
+# plt.figure(figsize=(10, 5))
 
-plt.figure(figsize=(10, 5))
+# for i, label in enumerate(['COVID-POSITIVE', 'COVID-NEGATIVE']):
+#     indices = np.where(labels == label)[0]
+#     random_indices = random.sample(indices.tolist(), num_images_to_display)
 
-for i, label in enumerate(['COVID-POSITIVE', 'COVID-NEGATIVE']):
-    indices = np.where(labels == label)[0]
-    random_indices = random.sample(indices.tolist(), num_images_to_display)
+#     for j, index in enumerate(random_indices, 1):
+#         plt.subplot(2, num_images_to_display, i * num_images_to_display + j)
+#         img = X[index, :, :, 0]  # Assuming you are working with grayscale images
+#         intensity_values = img.ravel()
+#         plt.hist(intensity_values, bins=50, alpha=0.7, label=f'Image {j}')
+#         plt.xlabel('Pixel Intensity')
+#         plt.ylabel('Frequency')
+#         plt.title(f'{label} - Image {j}')
 
-    for j, index in enumerate(random_indices, 1):
-        plt.subplot(2, num_images_to_display, i * num_images_to_display + j)
-        img = X[index, :, :, 0]  # Assuming you are working with grayscale images
-        intensity_values = img.ravel()
-        plt.hist(intensity_values, bins=50, alpha=0.7, label=f'Image {j}')
-        plt.xlabel('Pixel Intensity')
-        plt.ylabel('Frequency')
-        plt.title(f'{label} - Image {j}')
-
-plt.tight_layout()
-plt.show()
+# plt.tight_layout()
+# plt.show()
 
 import cv2
 import numpy as np
@@ -367,8 +362,6 @@ print(df_additional_pixel_intensity.head())
 sns.pairplot(df_additional_pixel_intensity, hue='Labels', diag_kind='kde')
 plt.show()
 
-labels
-
 import cv2
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -402,7 +395,7 @@ for i, label in enumerate(['COVID-POSITIVE', 'COVID-NEGATIVE']):
 plt.tight_layout()
 plt.show()
 
-"""## FEATURE EXTRACTION"""
+"""## USING HOG(HISTOGRAM OF GRADIENTS)"""
 
 import os
 import cv2
@@ -454,7 +447,7 @@ print(labels)       # Print the entire labels list to examine its content
 
 
 labels_array = np.array(labels)
-print(labels[800])
+print(labels[900])
 
 import matplotlib.pyplot as plt
 
@@ -482,186 +475,74 @@ X_train, X_test, y_train, y_test = train_test_split(hog_features_array, labels_a
 # unique_classes_train = np.unique(y_train)
 # print("Unique Classes in Training Data:", unique_classes_train)
 
-# from sklearn.svm import SVC
-# from sklearn.metrics import accuracy_score
-# # Create an SVM model
-# svm_model = SVC(kernel='rbf', random_state=42)
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+# Create an SVM model
+svm_model = SVC(kernel='rbf', random_state=42)
 
-# # Train the SVM model on the training data
-# svm_model.fit(X_train, y_train)
+# Train the SVM model on the training data
+svm_model.fit(X_train, y_train)
 
-# # Make predictions on the test set
-# y_pred = svm_model.predict(X_test)
+# Make predictions on the test set
+y_pred = svm_model.predict(X_test)
 
-# # Evaluate the model
-# accuracy = accuracy_score(y_test, y_pred)
-# print(f'SVM Model Accuracy: {accuracy}')
-
-# import numpy as np
-# import cv2
-# from skimage.feature import hog
-# from sklearn.model_selection import train_test_split
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.svm import SVC
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.tree import DecisionTreeClassifier
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.naive_bayes import GaussianNB
-# from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-
-# import numpy as np
-# from sklearn.model_selection import train_test_split
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.svm import SVC
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.tree import DecisionTreeClassifier
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.naive_bayes import GaussianNB
-# from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-
-# # Assuming X_train, X_test, y_train, y_test are already defined with shape (samples, height, width, channels)
-
-# # Reshape the data to (samples, height * width * channels)
-# X_train_reshaped = X_train.reshape(X_train.shape[0], -1)
-# X_test_reshaped = X_test.reshape(X_test.shape[0], -1)
-
-# # Standardize the feature values
-# scaler = StandardScaler()
-# X_train_scaled = scaler.fit_transform(X_train_reshaped)
-# X_test_scaled = scaler.transform(X_test_reshaped)
-
-# # Models
-# models = {
-#     'Logistic Regression': LogisticRegression(random_state=42),
-#     'Support Vector Machine': SVC(kernel='linear', random_state=42),
-#     'K-Nearest Neighbors': KNeighborsClassifier(n_neighbors=5),
-#     'Decision Tree': DecisionTreeClassifier(random_state=42),
-#     'Random Forest': RandomForestClassifier(random_state=42),
-#     'Naive Bayes': GaussianNB()
-# }
-
-# for name, model in models.items():
-#     model.fit(X_train_scaled, y_train)
-#     y_pred = model.predict(X_test_scaled)
-
-#     accuracy = accuracy_score(y_test, y_pred)
-#     conf_matrix = confusion_matrix(y_test, y_pred)
-#     classification_rep = classification_report(y_test, y_pred)
-
-#     print(f'Model: {name}')
-#     print(f'Accuracy: {accuracy}')
-#     print(f'Confusion Matrix:\n{conf_matrix}')
-#     print(f'Classification Report:\n{classification_rep}')
-#     print('---------------------')
-
-# from tensorflow.keras.models import save_model
-# import joblib
-
-# # Assuming svm_model is the variable containing your trained SVM model
-# svm_model = SVC(kernel='linear', random_state=42)  # You have this line in your code
-
-# # ... (your SVM training code)
-
-# # Save the trained SVM model using joblib
-# joblib.dump(svm_model, '/content/drive/My Drive/X-ray-20231027T074754Z-002/svm_model1.joblib')
-
-"""HOG IMPLEMENTATION FROM SCRATCH
-
-"""
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f'SVM Model Accuracy: {accuracy}')
 
 import numpy as np
-
 import cv2
+from skimage.feature import hog
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-# def calculate_gradients(image):
-#   sobel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
-#   sobel_y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
+# Assuming X_train, X_test, y_train, y_test are already defined with shape (samples, height, width, channels)
 
-#   gradient_x = cv2.filter2D(image, -1, sobel_x)
-#   gradient_y = cv2.filter2D(image, -1, sobel_y)
+# Reshape the data to (samples, height * width * channels)
+X_train_reshaped = X_train.reshape(X_train.shape[0], -1)
+X_test_reshaped = X_test.reshape(X_test.shape[0], -1)
 
-#   return gradient_x, gradient_y
+# Standardize the feature values
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train_reshaped)
+X_test_scaled = scaler.transform(X_test_reshaped)
 
-# def calculate_magnitude_and_angle(gradient_x,gradient_y):
-#   magnitude = np.sqrt(gradient_x**2 + gradient_y**2)
-#   angle=np.arctan2(gradient_y,gradient_x)*(180/np.pi)
-#   return magnitude,angle
+# Models
+models = {
+    'Logistic Regression': LogisticRegression(random_state=42),
+    'Support Vector Machine': SVC(kernel='linear', random_state=42),
+    'K-Nearest Neighbors': KNeighborsClassifier(n_neighbors=5),
+    'Decision Tree': DecisionTreeClassifier(random_state=42),
+    'Random Forest': RandomForestClassifier(random_state=42),
+    'Naive Bayes': GaussianNB()
+}
 
-# def calculate_histogram(magnitude, angle, cells_per_block):
-#     # Divide image into cells
-#     cell_size = 8
-#     cells_in_x = magnitude.shape[1]
-#     cells_in_y = magnitude.shape[0]
+for name, model in models.items():
+    model.fit(X_train_scaled, y_train)
+    y_pred = model.predict(X_test_scaled)
 
-#     histograms = []
+    accuracy = accuracy_score(y_test, y_pred)
+    conf_matrix = confusion_matrix(y_test, y_pred)
+    classification_rep = classification_report(y_test, y_pred)
 
-#     for i in range(cells_in_y):
-#         for j in range(cells_in_x):
-#             cell_magnitude = magnitude[i * cell_size: (i + 1) * cell_size,
-#                                         j * cell_size: (j + 1) * cell_size]
-#             cell_angle = angle[i * cell_size: (i + 1) * cell_size,
-#                                 j * cell_size: (j + 1) * cell_size]
+    print(f'Model: {name}')
+    print(f'Accuracy: {accuracy}')
+    print(f'Confusion Matrix:\n{conf_matrix}')
+    print(f'Classification Report:\n{classification_rep}')
+    print('---------------------')
 
-#             # Calculate histogram for each cell
-#             hist, _ = np.histogram(cell_angle, bins=9, range=(0, 180),
-#                                    weights=cell_magnitude)
 
-#             histograms.append(hist)
 
-#     histograms = np.array(histograms).reshape(cells_in_y, cells_in_x, 9)
+"""# CNN IMPLEMENTATION
 
-#     return histograms
-
-# def block_normalization(histograms):
-#     block_size = 2
-#     blocks_in_x = histograms.shape[1] - block_size + 1
-#     blocks_in_y = histograms.shape[0] - block_size + 1
-
-#     features = []
-
-#     for i in range(blocks_in_y):
-#         for j in range(blocks_in_x):
-#             block = histograms[i:i + block_size, j:j + block_size, :].flatten()
-#             norm_factor = np.sqrt(np.sum(block**2) + 1e-5)
-#             features.append(block / norm_factor)
-
-#     return np.array(features).flatten()
-
-# def extract_hog_features(image):
-#     # Grayscale conversion
-#     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-#     # Calculate gradients
-#     gradient_x, gradient_y = calculate_gradients(gray_image)
-
-#     # Calculate magnitude and angle
-#     magnitude, angle = calculate_magnitude_and_angle(gradient_x, gradient_y)
-
-#     # Calculate histograms for cells
-#     histograms = calculate_histogram(magnitude, angle, cells_per_block=2)
-
-#     # Block normalization
-#     features = block_normalization(histograms)
-
-#     return features
-
-# image_path = '/content/download.jpg'
-# image = cv2.imread(image_path)
-# hog_features = extract_hog_features(image)
-# print(hog_features)
-
-# import matplotlib.pyplot as plt
-
-# len(hog_features)
-
-# plt.bar(range(len(hog_features)), hog_features)
-# plt.title('HOG Features')
-# plt.show()
-
-"""# USING CNN IMPLEMENTATION
-
+### CNN USING TENSORFLOW
 """
 
 import tensorflow as tf
@@ -705,37 +586,228 @@ train_ds = keras.utils.image_dataset_from_directory(
     image_size=(256,256)
 )
 
-Normalize
 def process(image,label):
     image = tf.cast(image/255. ,tf.float32)
-    return image,label
+    return image, label
 
 train_ds = train_ds.map(process)
 
+x_train_lst = []
+y_train_lst = []
+
 for image, label in train_ds:
-  print(image, "image shape :  ",image.shape,  "Lable :  ", label)
+  # print(image, "image shape :  ",image.shape,  "Lable :  ", label)
+  x_train_lst.append(image)
+  y_train_lst.append(label)
 
 model.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])
 
-# history = model.fit(train_ds,epochs=1, batch_size=32)
+history = model.fit(train_ds, epochs=1, batch_size=32)
 
 import cv2
 
 import matplotlib.pyplot as plt
 
-# test_img = cv2.imread("/content/download.jpg")
+test_img = cv2.imread("/content/drive/MyDrive/X-ray/COVID/16654_4_1.jpg")
 
-# test_img
+plt.imshow(test_img)
 
-# print(test_img)
+test_img = cv2.resize(test_img,(256,256))
 
-# plt.imshow(test_img)
+test_input = test_img.reshape((1,256,256,3))
 
-# test_img = cv2.resize(test_img,(256,256))
+model.predict(test_input)
 
-# test_input = test_img.reshape((1,256,256,3))
+"""### CNN IMPLEMENTATION USING PYTORCH
 
-# model.predict(test_input)
+"""
+
+import torch
+import torch.nn as nn                           #imports the neural network module which contains the nn superclass
+import torch.optim as optim                     #imports the optimization algorithms such as gradient descent, adam etc
+import torch.nn.functional as F                 #has all the parameter-less functions, imports the activation functions(relu etc), but those can also be found in the nn package
+from torch.utils.data import DataLoader         #this provides a dataset class for data representation and a dataloader for iterating over the data among other things.
+import torchvision.datasets as datasets         #pytorch comes with datasets which can be imported through this
+import torchvision.transforms as transforms     #has methods to perform data augmentation operations such as cropping, resizing, normalization etc.
+
+from pathlib import Path
+
+import torch
+from torchvision import transforms
+from torch.utils.data import Dataset, DataLoader, random_split
+from PIL import Image
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Custom dataset class
+class CustomDataset(Dataset):
+    def __init__(self, root_folder_path, transform=None, label=1):
+        self.root_folder_path = root_folder_path
+        self.transform = transform
+        self.image_paths = os.listdir(root_folder_path)
+        self.labels = [label] * len(self.image_paths)
+
+    def __len__(self):
+        return len(self.image_paths)
+
+    def __getitem__(self, idx):
+        image_path = os.path.join(self.root_folder_path, self.image_paths[idx])
+        image = Image.open(image_path).convert("RGB")
+
+        if self.transform:
+            image = self.transform(image)
+
+        label = self.labels[idx]
+
+        return image, label
+
+# Set paths to the root folders
+covid_folder_path = "/content/drive/MyDrive/X-ray/Enhanced_COVID_Images"
+non_covid_folder_path = "/content/drive/MyDrive/X-ray/Enhanced_Non-COVID_Images"
+
+# Define transformations for data augmentation (you can customize these)
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+])
+
+# Create custom datasets
+covid_dataset = CustomDataset(root_folder_path=covid_folder_path, transform=transform, label=1)
+non_covid_dataset = CustomDataset(root_folder_path=non_covid_folder_path, transform=transform, label=0)
+
+# Combine datasets
+combined_dataset = torch.utils.data.ConcatDataset([covid_dataset, non_covid_dataset])
+
+# Split the combined dataset into training and testing sets
+train_size = int(0.8 * len(combined_dataset))
+test_size = len(combined_dataset) - train_size
+train_dataset, test_dataset = random_split(combined_dataset, [train_size, test_size])
+
+# Create dataloaders
+train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4)
+test_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=4)
+
+# Display random images from the training dataset
+def display_random_images(dataloader, num_images=10):
+    data_iter = iter(dataloader)
+    images, labels = next(data_iter)
+
+    # Display random images
+    random_indices = np.random.choice(len(labels), num_images, replace=False)
+
+    fig, axes = plt.subplots(1, num_images, figsize=(15, 3))
+    for i, index in enumerate(random_indices):
+        image = images[index].permute(1, 2, 0).numpy()  # Convert to NumPy array and rearrange channels
+        label = labels[index].item()
+
+        axes[i].imshow(image)
+        axes[i].set_title(f"Label: {label}")
+        axes[i].axis('off')
+
+    plt.show()
+
+# Display random images from the training dataset
+print("Random images from the training dataset:")
+display_random_images(train_dataloader)
+
+# Display random images from the testing dataset
+print("Random images from the testing dataset:")
+display_random_images(test_dataloader)
+
+from torch.utils.data import Dataset, DataLoader, random_split
+from torchvision import transforms, datasets
+
+class SimpleCNN(nn.Module):
+    def __init__(self):
+        super(SimpleCNN, self).__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+        )
+        self.fc_layers = nn.Sequential(
+            nn.Linear(128 * 56 * 56, 256),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5),
+            nn.Linear(256, 1),
+            nn.Sigmoid(),
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc_layers(x)
+        return x
+
+in_channels = 3
+batch_size = 64
+learning_rate = 0.01
+
+#output labels
+num_classes =2
+
+#number of epochs the model is training for
+num_epochs = 3
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+model = SimpleCNN()
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+train_losses = []
+
+def train(epoch):
+
+    train_loss=0
+
+    for batch_idx, (data, targets) in enumerate(train_dataloader):
+        data = data.to(device=device)
+        targets = targets.to(device=device)
+        scores = model(data)
+        loss = criterion(scores, targets)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()
+
+    train_loss = train_loss/len(train_dataloader)
+
+    train_losses.append(train_loss)
+
+for epoch in range(num_epochs):
+    model.train()
+    for inputs, labels in train_dataloader:
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(outputs.squeeze(), labels.float())
+        loss.backward()
+        optimizer.step()
+
+    print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {loss.item()}")
+
+
+model.eval()
+correct = 0
+total = 0
+
+with torch.no_grad():
+    for inputs, labels in test_dataloader:
+        outputs = model(inputs)
+        predicted = (outputs.squeeze() > 0.5).int()
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+accuracy = correct / total
+print(f"Test Accuracy: {accuracy * 100:.2f}%")
+
+"""# LBP(Local Binary Pattern)"""
 
 ## LBP IMPLEMENATATION
 
@@ -834,5 +906,210 @@ plt.show()
 plt.imshow(img_lbp, cmap ="gray")
 plt.show()
 
-print("LBP Program is finished")
+img_lbp.shape
+
+import numpy as np
+def lbp_histogram(filepath, num_bins=256):
+
+     img_bgr = cv2.imread(filepath, 1)
+    #  print(img_bgr)
+     if(img_bgr is  None):
+      return None
+     height, width, _ = img_bgr.shape
+
+     # We need to convert RGB image
+     # into gray one because gray
+     # image has one channel only.
+     img_gray = cv2.cvtColor(img_bgr,
+						cv2.COLOR_BGR2GRAY)
+
+     # Create a numpy array as
+     # the same height and width
+     # of RGB image
+     img_lbp = np.zeros((height, width),
+     				np.uint8)
+
+     for i in range(0, height):
+    	 for j in range(0, width):
+    		 img_lbp[i, j] = lbp_calculated_pixel(img_gray, i, j)
+
+     histogram, _ = np.histogram(img_lbp, bins=np.arange(num_bins + 1), density=True)
+     return histogram
+
+label_dict = {
+    "COVID-POSITIVE" : 1,
+    "COVID-NEGATIVE" : 0
+}
+
+X_train = []
+y_train = []
+
+new_data = data.iloc[300 : 600, :]
+
+new_data.info()
+
+new_data["Label"].value_counts()
+
+new_data.shape
+
+for index, row in new_data.iterrows():
+  ans = lbp_histogram(row[0])
+  if ans is not None :
+    X_train.append(ans)
+    y_train.append(label_dict[row[1]])
+
+X_train_array = np.array(X_train)
+y_train_array = np.array(y_train)
+
+from sklearn.model_selection import train_test_split
+
+x_train, x_test, y_train, y_test = train_test_split(X_train_array, y_train_array, test_size=0.2, random_state=42)
+
+## implementing the ANN model
+
+import tensorflow as tf
+from tensorflow import keras
+from keras.models import Sequential
+from keras.layers import Dense, BatchNormalization , Dropout
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train_array.shape[1],)),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dropout(0.3),
+    tf.keras.layers.Dense(16, activation='relu'),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(1, activation='sigmoid')  # Use 'sigmoid' for binary classification
+])
+
+model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+
+model.fit(x_train, y_train, epochs=20, batch_size=32, validation_split=0.1)
+
+# Evaluate the model on the test set
+y_pred = model.predict(x_test)
+y_pred_binary = (y_pred > 0.5).astype(int)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred_binary)
+print(f"Test Accuracy: {accuracy}")
+
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+# Create an SVM model
+svm_model = SVC(kernel='rbf', random_state=42)
+
+# Train the SVM model on the training data
+svm_model.fit(x_train, y_train)
+
+# Make predictions on the test set
+y_pred = svm_model.predict(x_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f'SVM Model Accuracy: {accuracy}')
+
+
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+knn_model = KNeighborsClassifier(n_neighbors=5)
+knn_model.fit(x_train, y_train)
+
+# Make predictions on the test set
+y_pred_knn = knn_model.predict(x_test)
+
+# Calculate and print accuracy
+accuracy_knn = accuracy_score(y_test, y_pred_knn)
+print(f"KNN Accuracy: {accuracy_knn}")
+
+tree_model = DecisionTreeClassifier()
+tree_model.fit(x_train, y_train)
+
+# Make predictions on the test set
+y_pred_tree = tree_model.predict(x_test)
+
+# Calculate and print accuracy
+accuracy_tree = accuracy_score(y_test, y_pred_tree)
+print(f"Decision Tree Accuracy: {accuracy_tree}")
+
+nb_model = GaussianNB()
+nb_model.fit(x_train, y_train)
+
+# Make predictions on the test set
+y_pred_nb = nb_model.predict(x_test)
+
+# Calculate and print accuracy
+accuracy_nb = accuracy_score(y_test, y_pred_nb)
+print(f"Naive Bayes Accuracy: {accuracy_nb}")
+
+"""Implementing the LBP features for NN in Pytorch"""
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import TensorDataset, DataLoader
+
+# Convert NumPy arrays to PyTorch tensors
+x_train_tensor = torch.tensor(x_train, dtype=torch.float32)
+y_train_tensor = torch.tensor(y_train, dtype=torch.float32)
+x_test_tensor = torch.tensor(x_test, dtype=torch.float32)
+y_test_tensor = torch.tensor(y_test, dtype=torch.float32)
+
+# Create DataLoader for training and testing sets
+train_dataset = TensorDataset(x_train_tensor, y_train_tensor)
+train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+
+test_dataset = TensorDataset(x_test_tensor, y_test_tensor)
+test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+
+# Define the neural network model
+class SimpleNN(nn.Module):
+    def __init__(self, input_size):
+        super(SimpleNN, self).__init__()
+        self.fc1 = nn.Linear(input_size, 128)
+        self.dropout1 = nn.Dropout(0.5)
+        self.fc2 = nn.Linear(128, 64)
+        self.dropout2 = nn.Dropout(0.3)
+        self.fc3 = nn.Linear(64, 1)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = self.dropout1(x)
+        x = torch.relu(self.fc2(x))
+        x = self.dropout2(x)
+        x = self.fc3(x)
+        x = self.sigmoid(x)
+        return x
+
+# Initialize the model and define the loss function and optimizer
+model = SimpleNN(input_size=x_train.shape[1])
+criterion = nn.BCELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# Training the model
+num_epochs = 10
+for epoch in range(num_epochs):
+    model.train()
+    for inputs, labels in train_loader:
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(outputs.squeeze(), labels)
+        loss.backward()
+        optimizer.step()
+
+    # Evaluate the model on the test set
+    model.eval()
+    with torch.no_grad():
+        y_pred = model(x_test_tensor).numpy()
+        y_pred_binary = (y_pred > 0.5).astype(int)
+        accuracy = accuracy_score(y_test, y_pred_binary)
+        print(f"Epoch {epoch + 1}/{num_epochs} - Test Accuracy: {accuracy}")
+
+# Print final accuracy
+print(f"Final Test Accuracy: {accuracy}")
 
