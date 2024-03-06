@@ -58,7 +58,7 @@ The outbreak of COVID-19 has posed a significant challenge worldwide, and the ea
 
 - HOG technique achieved an accuracy of 74.56%.
 - CNN technique achieved an accuracy of Y%.
-- LBP technique achieved an accuracy of Z%.
+- LBP technique achieved an accuracy of 91.666%.
 
 ## Conclusion
 
