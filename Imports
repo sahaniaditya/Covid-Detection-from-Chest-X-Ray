@@ -1,0 +1,31 @@
+Necessary imports required to run our code-
+import cv2
+import numpy as np
+import concurrent.futures
+from tqdm import tqdm
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import skew, kurtosis
+from skimage.feature import hog
+from skimage import exposure
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import tensorflow as tf
+from tensorflow import keras
+from keras import Sequential
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, BatchNormalization, Dropout
+import torch
+import torch.nn as nn                           #imports the neural network module which contains the nn superclass
+import torch.optim as optim                     #imports the optimization algorithms such as gradient descent, adam etc
+import torch.nn.functional as F                 #has all the parameter-less functions, imports the activation functions(relu etc), but those can also be found in the nn package
+from torch.utils.data import DataLoader         #this provides a dataset class for data representation and a dataloader for iterating over the data among other things.
+import torchvision.datasets as datasets         #pytorch comes with datasets which can be imported through this
+import torchvision.transforms as transforms     #has methods to perform data augmentation operations such as cropping, resizing, normalization etc.

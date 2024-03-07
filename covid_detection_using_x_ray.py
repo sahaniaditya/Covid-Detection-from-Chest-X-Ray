@@ -480,6 +480,7 @@ from sklearn.metrics import accuracy_score
 # Create an SVM model
 svm_model = SVC(kernel='rbf', random_state=42)
 
+
 # Train the SVM model on the training data
 svm_model.fit(X_train, y_train)
 
@@ -504,6 +505,22 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 import numpy as np
+
+
+# Train the SVM model on the training data
+svm_model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = svm_model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f'SVM Model Accuracy: {accuracy}')
+
+import numpy as np
+import cv2
+from skimage.feature import hog
+
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -512,7 +529,11 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
+
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
 
 # Assuming X_train, X_test, y_train, y_test are already defined with shape (samples, height, width, channels)
 
@@ -729,6 +750,96 @@ display_random_images(test_dataloader)
 
 from torch.utils.data import Dataset, DataLoader, random_split
 from torchvision import transforms, datasets
+
+
+class SimpleCNN(nn.Module):
+    def __init__(self):
+        super(SimpleCNN, self).__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+        )
+        self.fc_layers = nn.Sequential(
+            nn.Linear(128 * 56 * 56, 256),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5),
+            nn.Linear(256, 1),
+            nn.Sigmoid(),
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc_layers(x)
+        return x
+
+in_channels = 3
+batch_size = 64
+learning_rate = 0.01
+
+#output labels
+num_classes =2
+
+#number of epochs the model is training for
+num_epochs = 3
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+model = SimpleCNN()
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+train_losses = []
+
+def train(epoch):
+
+    train_loss=0
+
+    for batch_idx, (data, targets) in enumerate(train_dataloader):
+        data = data.to(device=device)
+        targets = targets.to(device=device)
+        scores = model(data)
+        loss = criterion(scores, targets)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()
+
+    train_loss = train_loss/len(train_dataloader)
+
+    train_losses.append(train_loss)
+
+for epoch in range(num_epochs):
+    model.train()
+    for inputs, labels in train_dataloader:
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(outputs.squeeze(), labels.float())
+        loss.backward()
+        optimizer.step()
+
+    print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {loss.item()}")
+
+
+model.eval()
+correct = 0
+total = 0
+
+with torch.no_grad():
+    for inputs, labels in test_dataloader:
+        outputs = model(inputs)
+        predicted = (outputs.squeeze() > 0.5).int()
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+accuracy = correct / total
+print(f"Test Accuracy: {accuracy * 100:.2f}%")
+
 
 class SimpleCNN(nn.Module):
     def __init__(self):
@@ -978,7 +1089,11 @@ x_train, x_test, y_train, y_test = train_test_split(X_train_array, y_train_array
 
 ## implementing the ANN model
 
+
 import tensorflow
+
+import tensorflow as tf
+
 from tensorflow import keras
 from keras.models import Sequential
 from keras.layers import Dense, BatchNormalization , Dropout
@@ -991,6 +1106,29 @@ model.add(Dense(64, activation="relu"))
 model.add(Dense(1, activation="sigmoid"))
 
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(X_train_array.shape[1],)),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(32, activation='relu'),
+    tf.keras.layers.Dropout(0.3),
+    tf.keras.layers.Dense(16, activation='relu'),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(1, activation='sigmoid')  # Use 'sigmoid' for binary classification
+])
+
+model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+
+model.fit(x_train, y_train, epochs=20, batch_size=32, validation_split=0.1)
+
+# Evaluate the model on the test set
+y_pred = model.predict(x_test)
+y_pred_binary = (y_pred > 0.5).astype(int)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred_binary)
+print(f"Test Accuracy: {accuracy}")
+
 
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
@@ -1006,4 +1144,110 @@ y_pred = svm_model.predict(x_test)
 # Evaluate the model
 accuracy = accuracy_score(y_test, y_pred)
 print(f'SVM Model Accuracy: {accuracy}')
+
+
+
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+knn_model = KNeighborsClassifier(n_neighbors=5)
+knn_model.fit(x_train, y_train)
+
+# Make predictions on the test set
+y_pred_knn = knn_model.predict(x_test)
+
+# Calculate and print accuracy
+accuracy_knn = accuracy_score(y_test, y_pred_knn)
+print(f"KNN Accuracy: {accuracy_knn}")
+
+tree_model = DecisionTreeClassifier()
+tree_model.fit(x_train, y_train)
+
+# Make predictions on the test set
+y_pred_tree = tree_model.predict(x_test)
+
+# Calculate and print accuracy
+accuracy_tree = accuracy_score(y_test, y_pred_tree)
+print(f"Decision Tree Accuracy: {accuracy_tree}")
+
+nb_model = GaussianNB()
+nb_model.fit(x_train, y_train)
+
+# Make predictions on the test set
+y_pred_nb = nb_model.predict(x_test)
+
+# Calculate and print accuracy
+accuracy_nb = accuracy_score(y_test, y_pred_nb)
+print(f"Naive Bayes Accuracy: {accuracy_nb}")
+
+"""Implementing the LBP features for NN in Pytorch"""
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import TensorDataset, DataLoader
+
+# Convert NumPy arrays to PyTorch tensors
+x_train_tensor = torch.tensor(x_train, dtype=torch.float32)
+y_train_tensor = torch.tensor(y_train, dtype=torch.float32)
+x_test_tensor = torch.tensor(x_test, dtype=torch.float32)
+y_test_tensor = torch.tensor(y_test, dtype=torch.float32)
+
+# Create DataLoader for training and testing sets
+train_dataset = TensorDataset(x_train_tensor, y_train_tensor)
+train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+
+test_dataset = TensorDataset(x_test_tensor, y_test_tensor)
+test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+
+# Define the neural network model
+class SimpleNN(nn.Module):
+    def __init__(self, input_size):
+        super(SimpleNN, self).__init__()
+        self.fc1 = nn.Linear(input_size, 128)
+        self.dropout1 = nn.Dropout(0.5)
+        self.fc2 = nn.Linear(128, 64)
+        self.dropout2 = nn.Dropout(0.3)
+        self.fc3 = nn.Linear(64, 1)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = self.dropout1(x)
+        x = torch.relu(self.fc2(x))
+        x = self.dropout2(x)
+        x = self.fc3(x)
+        x = self.sigmoid(x)
+        return x
+
+# Initialize the model and define the loss function and optimizer
+model = SimpleNN(input_size=x_train.shape[1])
+criterion = nn.BCELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# Training the model
+num_epochs = 10
+for epoch in range(num_epochs):
+    model.train()
+    for inputs, labels in train_loader:
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(outputs.squeeze(), labels)
+        loss.backward()
+        optimizer.step()
+
+    # Evaluate the model on the test set
+    model.eval()
+    with torch.no_grad():
+        y_pred = model(x_test_tensor).numpy()
+        y_pred_binary = (y_pred > 0.5).astype(int)
+        accuracy = accuracy_score(y_test, y_pred_binary)
+        print(f"Epoch {epoch + 1}/{num_epochs} - Test Accuracy: {accuracy}")
+
+# Print final accuracy
+print(f"Final Test Accuracy: {accuracy}")
+
 
