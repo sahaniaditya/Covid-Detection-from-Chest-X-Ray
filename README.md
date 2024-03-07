@@ -56,9 +56,11 @@ The outbreak of COVID-19 has posed a significant challenge worldwide, and the ea
 
 ## Results
 
+
 - HOG feature extraction technique and the implementation of various ML models achieved the best accuracy of 74.56%.
 - CNN technique achieved an accuracy of Y%. Both Tensorflow and Pytorch implementation were done and the results demonstrated.
 - LBP technique achieved an accuracy of Z%. A simple neural network was implemented after the extraction of the features.
+
 
 ## Conclusion
 
